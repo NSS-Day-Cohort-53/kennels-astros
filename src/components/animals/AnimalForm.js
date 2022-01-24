@@ -1,34 +1,43 @@
-import React, { useState, useContext } from "react"
+import React, { useState, useContext, useEffect } from "react"
 import "./AnimalForm.css"
 import AnimalRepository from "../../repositories/AnimalRepository";
+import LocationRepository from "../../repositories/LocationRepository";
+import { useHistory } from "react-router-dom"
 
 
 export default (props) => {
     const [animalName, setName] = useState("")
     const [breed, setBreed] = useState("")
     const [animals, setAnimals] = useState([])
-    const [employees, setEmployees] = useState([])
-    const [employeeId, setEmployeeId] = useState(0)
+    const [locations, setLocations] = useState([])
+    const [locationId, setLocationId] = useState(0)
     const [saveEnabled, setEnabled] = useState(false)
+    const history = useHistory()
+
+    useEffect(
+        () => {
+            LocationRepository.getAll()
+            .then ((data) => {
+                setLocations(data)
+            })
+        }, []
+    )
 
     const constructNewAnimal = evt => {
         evt.preventDefault()
-        const eId = parseInt(employeeId)
 
-        if (eId === 0) {
-            window.alert("Please select a caretaker")
+        if (locationId === null) {
+            window.alert("Please select a location")
         } else {
-            const emp = employees.find(e => e.id === eId)
             const animal = {
                 name: animalName,
                 breed: breed,
-                employeeId: eId,
-                locationId: parseInt(emp.locationId)
+                locationId: parseInt(locationId)
             }
 
             AnimalRepository.addAnimal(animal)
                 .then(() => setEnabled(true))
-                .then(() => props.history.push("/animals"))
+                .then(() => history.push("/animals"))
         }
     }
 
@@ -59,16 +68,16 @@ export default (props) => {
                 />
             </div>
             <div className="form-group">
-                <label htmlFor="employee">Make appointment with caretaker</label>
+                <label htmlFor="location">Make appointment for location</label>
                 <select
                     defaultValue=""
-                    name="employee"
-                    id="employeeId"
+                    name="location"
+                    id="locationId"
                     className="form-control"
-                    onChange={e => setEmployeeId(e.target.value)}
+                    onChange={e => setLocationId(e.target.value)}
                 >
-                    <option value="">Select an employee</option>
-                    {employees.map(e => (
+                    <option value="">Select a Location</option>
+                    {locations.map(e => (
                         <option key={e.id} id={e.id} value={e.id}>
                             {e.name}
                         </option>
