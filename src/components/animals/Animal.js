@@ -12,11 +12,13 @@ export const Animal = ({ animal, syncAnimals,
     const [detailsOpen, setDetailsOpen] = useState(false)
     const [isEmployee, setAuth] = useState(false)
     const [myOwners, setPeople] = useState([])
+    console.log(myOwners)
     const [allOwners, registerOwners] = useState([])
     const [classes, defineClasses] = useState("card animal")
     const { getCurrentUser } = useSimpleAuth()
     const history = useHistory()
     const { animalId } = useParams()
+    // const { userId } = useParams()
     const { resolveResource, resource: currentAnimal } = useResourceResolver()
 
     useEffect(() => {
@@ -30,6 +32,7 @@ export const Animal = ({ animal, syncAnimals,
         }
     }, [owners])
 
+    //may use this function to display animal owner
     const getPeople = () => {
         return AnimalOwnerRepository
             .getOwnersByAnimal(currentAnimal.id)
@@ -39,6 +42,7 @@ export const Animal = ({ animal, syncAnimals,
     useEffect(() => {
         getPeople()
     }, [currentAnimal])
+
 
     useEffect(() => {
         if (animalId) {
@@ -98,7 +102,11 @@ export const Animal = ({ animal, syncAnimals,
                                     ? <select defaultValue=""
                                         name="owner"
                                         className="form-control small"
-                                        onChange={() => {}} >
+                                        //drop down menu for selecting animal owner
+                                        onChange={
+                                            (evt) => {
+                                                AnimalOwnerRepository.assignOwner(animal.id, evt.target.value)
+                                            }} >
                                         <option value="">
                                             Select {myOwners.length === 1 ? "another" : "an"} owner
                                         </option>
@@ -107,8 +115,9 @@ export const Animal = ({ animal, syncAnimals,
                                         }
                                     </select>
                                     : null
-                            }
 
+
+                            }
 
                             {
                                 detailsOpen && "treatments" in currentAnimal
@@ -135,8 +144,8 @@ export const Animal = ({ animal, syncAnimals,
                                 ? <button className="btn btn-warning mt-3 form-control small" onClick={() =>
                                     AnimalOwnerRepository
                                         .removeOwnersAndCaretakers(currentAnimal.id)
-                                        .then(() => {}) // Remove animal
-                                        .then(() => {}) // Get all animals
+                                        .then(() => { }) // Remove animal
+                                        .then(() => { }) // Get all animals
                                 }>Discharge</button>
                                 : ""
                         }
