@@ -5,6 +5,7 @@ import useResourceResolver from "../../hooks/resource/useResourceResolver";
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import person from "./person.png"
 import "./Employee.css"
+import LocationRepository from "../../repositories/LocationRepository";
 
 
 export default ({ employee }) => {
@@ -24,9 +25,10 @@ export default ({ employee }) => {
 
     useEffect(() => {
         if (resource?.employeeLocations?.length > 0) {
-            markLocation(resource.employeeLocations[0])
+            markLocation(resource.employeeLocations[1])
         }
-    }, [resource])
+    }, [resource])  
+
 
     return (
         <article className={classes}>
@@ -53,7 +55,7 @@ export default ({ employee }) => {
                                 Caring for 0 animals
                             </section>
                             <section>
-                                Working at unknown location
+                                Working at  location
                             </section>
                         </>
                         : ""
