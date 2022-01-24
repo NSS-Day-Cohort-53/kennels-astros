@@ -1,11 +1,19 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import EmployeeRepository from "../../repositories/EmployeeRepository";
+import LocationRepository from "../../repositories/LocationRepository";
 import "./EmployeeForm.css"
 
 
 export default (props) => {
     const [employee, updateEmployee] = useState()
     const [locations, defineLocations] = useState([])
+
+    useEffect(
+        LocationRepository.getAll()
+            .then((data) => {
+                defineLocations(data)
+            })
+    )
 
     const constructNewEmployee = () => {
         if (employee.locationId === 0) {
