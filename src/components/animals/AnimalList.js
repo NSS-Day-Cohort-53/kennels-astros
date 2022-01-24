@@ -53,19 +53,13 @@ export const AnimalListComponent = (props) => {
         <>
             <AnimalDialog toggleDialog={toggleDialog} animal={currentAnimal} />
 
-
-            {
-                getCurrentUser().employee
-                    ? ""
-                    : <div className="centerChildren btn--newResource">
-                        <button type="button"
-                            className="btn btn-success "
-                            onClick={() => { history.push("/animals/new") }}>
-                            Register Animal
-                        </button>
-                    </div>
-            }
-
+                <div className="centerChildren btn--newResource">
+                    <button type="button"
+                        className="btn btn-success "
+                        onClick={() => { history.push("/animals/new") }}>
+                        Register Animal
+                    </button>
+                </div>
 
             <ul className="animals">
                 {
