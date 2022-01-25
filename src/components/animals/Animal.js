@@ -19,6 +19,7 @@ export const Animal = ({ animal, syncAnimals,
     const { animalId } = useParams()
     const { resolveResource, resource: currentAnimal } = useResourceResolver()
 
+    const currentUser = getCurrentUser()
 
     useEffect(() => {
         setAuth(getCurrentUser().employee)
@@ -34,7 +35,7 @@ export const Animal = ({ animal, syncAnimals,
 
     const getPeople = () => {
         return AnimalOwnerRepository
-            .getOwnersByAnimal(currentAnimal.id)
+            .getOwnersByAnimal(currentAnimal.id, currentUser)
             .then(people => setPeople(people))
     }
 
@@ -88,7 +89,12 @@ export const Animal = ({ animal, syncAnimals,
                         <section>
                             <h6>Caretaker(s)</h6>
                             <span className="small">
-                                Unknown
+                                {
+                                    animal.animalCaretakers?.map((foundCaretaker) => {
+                                        return foundCaretaker.user.name
+                                    })
+                                        .join(" and ")
+                                }
                             </span>
 
 
