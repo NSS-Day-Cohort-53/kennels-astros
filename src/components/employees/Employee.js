@@ -16,11 +16,18 @@ export default ({ employee }) => {
     const { getCurrentUser } = useSimpleAuth()
     const { resolveResource, resource } = useResourceResolver()
     const [locations, setLocation] = useState([])
-    const [menuLocations, setMenuLocations] = useState
+    const [menuLocations, setMenuLocations] = useState([])
     useEffect(() => {
         EmployeeRepository.getEmployeeLocations()
         .then((data) => {
             setLocation(data)
+        })
+    }, [])
+
+    useEffect(() => {
+        LocationRepository.getAll()
+        .then((data) => {
+            setMenuLocations(data)
         })
     }, [])
 
@@ -38,7 +45,7 @@ export default ({ employee }) => {
     }, [resource])  
 
     const employeeLocations = locations.filter((location) => location.userId === parseInt(resource.id))
-   
+   // function with a conditional to determine if that employee already works at that location, add post funtion for employee locations database
     return (
         <article className={classes}>
             <section className="card-body">
@@ -74,7 +81,7 @@ export default ({ employee }) => {
                                     name="location"
                                     className="form-control">
                         <option value="0">Select location</option>
-                        {locations.map((e) => {
+                        {menuLocations.map((e) => {
                            return <option key={e.id} value={e.id}>
                                 {e.name}
                             </option>
