@@ -90,6 +90,7 @@ export const Animal = ({ animal, syncAnimals,
                                     animal.animalCaretakers?.map((foundCaretaker) => {
                                       return foundCaretaker.user.name 
                                     })
+                                    .join(" and ")
                                 }
                             </span>
 
