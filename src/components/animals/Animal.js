@@ -32,6 +32,7 @@ export const Animal = ({ animal, syncAnimals,
         }
     }, [owners])
 
+
     const getPeople = () => {
         return AnimalOwnerRepository
             .getOwnersByAnimal(currentAnimal.id, currentUser)
@@ -40,7 +41,8 @@ export const Animal = ({ animal, syncAnimals,
 
     useEffect(() => {
         getPeople()
-    }, [currentAnimal])
+    }, [currentAnimal, animal])
+
 
     useEffect(() => {
         if (animalId) {
@@ -51,9 +53,10 @@ export const Animal = ({ animal, syncAnimals,
                 .then(() => {
                     OwnerRepository.getAllCustomers().then(registerOwners)
                 })
-            }
-        }, [animalId])
-        
+        }
+    }, [animalId])
+
+    console.log(myOwners)
     return (
         <>
             <li className={classes}>
@@ -88,16 +91,17 @@ export const Animal = ({ animal, syncAnimals,
                             <span className="small">
                                 {
                                     animal.animalCaretakers?.map((foundCaretaker) => {
-                                      return foundCaretaker.user.name 
+                                        return foundCaretaker.user.name
                                     })
-                                    .join(" and ")
+                                        .join(" and ")
                                 }
                             </span>
 
 
                             <h6>Owners</h6>
                             <span className="small">
-                                Owned by unknown
+                                {myOwners.map((ownerName) => ownerName.user?.name).join(" and ")}
+
                             </span>
 
                             {
@@ -105,17 +109,26 @@ export const Animal = ({ animal, syncAnimals,
                                     ? <select defaultValue=""
                                         name="owner"
                                         className="form-control small"
-                                        onChange={() => {}} >
+                                        //drop down menu for selecting animal owner
+                                        onChange={
+                                            (evt) => {
+                                                AnimalOwnerRepository.assignOwner(animal.id, parseInt(evt.target.value)).then(() => {
+                                                    syncAnimals()
+                                                })
+                                            }
+                                        } >
                                         <option value="">
                                             Select {myOwners.length === 1 ? "another" : "an"} owner
                                         </option>
                                         {
                                             allOwners.map(o => <option key={o.id} value={o.id}>{o.name}</option>)
+
                                         }
                                     </select>
                                     : null
-                            }
 
+
+                            }
 
                             {
                                 detailsOpen && "treatments" in currentAnimal
@@ -142,8 +155,8 @@ export const Animal = ({ animal, syncAnimals,
                                 ? <button className="btn btn-warning mt-3 form-control small" onClick={() =>
                                     AnimalOwnerRepository
                                         .removeOwnersAndCaretakers(currentAnimal.id)
-                                        .then(() => {}) // Remove animal
-                                        .then(() => {}) // Get all animals
+                                        .then(() => { }) // Remove animal
+                                        .then(() => { }) // Get all animals
                                 }>Discharge</button>
                                 : ""
                         }
