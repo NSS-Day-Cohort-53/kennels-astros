@@ -12,14 +12,13 @@ export const Animal = ({ animal, syncAnimals,
     const [detailsOpen, setDetailsOpen] = useState(false)
     const [isEmployee, setAuth] = useState(false)
     const [myOwners, setPeople] = useState([])
-    console.log(myOwners)
     const [allOwners, registerOwners] = useState([])
     const [classes, defineClasses] = useState("card animal")
     const { getCurrentUser } = useSimpleAuth()
     const history = useHistory()
     const { animalId } = useParams()
-    // const { userId } = useParams()
     const { resolveResource, resource: currentAnimal } = useResourceResolver()
+
 
     useEffect(() => {
         setAuth(getCurrentUser().employee)
@@ -56,6 +55,7 @@ export const Animal = ({ animal, syncAnimals,
         }
     }, [animalId])
 
+    console.log(myOwners)
     return (
         <>
             <li className={classes}>
@@ -94,7 +94,7 @@ export const Animal = ({ animal, syncAnimals,
 
                             <h6>Owners</h6>
                             <span className="small">
-                                Owned by unknown
+                                {myOwners.map((ownerName) => ownerName.user?.name)}
                             </span>
 
                             {
@@ -105,7 +105,7 @@ export const Animal = ({ animal, syncAnimals,
                                         //drop down menu for selecting animal owner
                                         onChange={
                                             (evt) => {
-                                                AnimalOwnerRepository.assignOwner(animal.id, evt.target.value)
+                                                AnimalOwnerRepository.assignOwner(animal.id, parseInt(evt.target.value)).then(() => { history.go(0) })
                                             }} >
                                         <option value="">
                                             Select {myOwners.length === 1 ? "another" : "an"} owner
