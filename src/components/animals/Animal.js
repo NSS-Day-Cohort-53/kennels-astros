@@ -95,6 +95,7 @@ export const Animal = ({ animal, syncAnimals,
                             <h6>Owners</h6>
                             <span className="small">
                                 {myOwners.map((ownerName) => ownerName.user?.name)}
+
                             </span>
 
                             {
@@ -105,13 +106,17 @@ export const Animal = ({ animal, syncAnimals,
                                         //drop down menu for selecting animal owner
                                         onChange={
                                             (evt) => {
-                                                AnimalOwnerRepository.assignOwner(animal.id, parseInt(evt.target.value)).then(() => { history.go(0) })
+                                                AnimalOwnerRepository.assignOwner(animal.id, parseInt(evt.target.value)).then((animal => {
+                                                    assignOwner(animal)
+                                                }))
+                                                // .then(() => { history.go(0) })
                                             }} >
                                         <option value="">
                                             Select {myOwners.length === 1 ? "another" : "an"} owner
                                         </option>
                                         {
                                             allOwners.map(o => <option key={o.id} value={o.id}>{o.name}</option>)
+
                                         }
                                     </select>
                                     : null
