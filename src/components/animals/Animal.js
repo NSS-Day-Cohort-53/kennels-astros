@@ -41,7 +41,7 @@ export const Animal = ({ animal, syncAnimals,
 
     useEffect(() => {
         getPeople()
-    }, [currentAnimal])
+    }, [currentAnimal, animal])
 
 
     useEffect(() => {
@@ -113,7 +113,7 @@ export const Animal = ({ animal, syncAnimals,
                                         onChange={
                                             (evt) => {
                                                 AnimalOwnerRepository.assignOwner(animal.id, parseInt(evt.target.value)).then(() => {
-                                                    history.go(0)
+                                                    syncAnimals()
                                                 })
                                             }
                                         } >
