@@ -46,7 +46,10 @@ export default ({ employee }) => {
 
     const employeeLocations = locations.filter((location) => location.userId === parseInt(resource.id))
    // function with a conditional to determine if that employee already works at that location, add post funtion for employee locations database
-    return (
+   const updateEmployeeLocation = () => {
+       if (resource.id === (employ))
+   } 
+   return (
         <article className={classes}>
             <section className="card-body">
                 <img alt="Kennel employee icon" src={person} className="icon--person" />
@@ -85,8 +88,6 @@ export default ({ employee }) => {
                            return <option key={e.id} value={e.id}>
                                 {e.name}
                             </option>
-
-
                         })}
                     </select>
 
