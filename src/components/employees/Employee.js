@@ -6,6 +6,8 @@ import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import person from "./person.png"
 import "./Employee.css"
 import LocationRepository from "../../repositories/LocationRepository";
+import {useHistory} from "react-router-dom/cjs/react-router-dom.min";
+
 
 
 export default ({ employee }) => {
@@ -17,6 +19,7 @@ export default ({ employee }) => {
     const { resolveResource, resource } = useResourceResolver()
     const [locations, setLocation] = useState([])
     const [menuLocations, setMenuLocations] = useState([])
+    const history = useHistory()
     useEffect(() => {
         EmployeeRepository.getEmployeeLocations()
         .then((data) => {
@@ -45,9 +48,21 @@ export default ({ employee }) => {
     }, [resource])  
 
     const employeeLocations = locations.filter((location) => location.userId === parseInt(resource.id))
+    const employeeLocationId = employeeLocations.map((location) => {
+        return location.locationId
+    })
    // function with a conditional to determine if that employee already works at that location, add post funtion for employee locations database
-   const updateEmployeeLocation = () => {
-       if (resource.id === (employ))
+   const updateEmployeeLocation = (locId) => {
+       if (parseInt(locId) === employeeLocationId.find((id) => id === parseInt(locId))) {
+        window.alert("Employee is already assigned this location")
+        } else {
+            EmployeeRepository.assignEmployee({
+                userId: resource.id,
+                locationId: parseInt(locId)
+            }).then(() => {
+                history.go(`/employees/${resource.id}`)
+            })
+        }
    } 
    return (
         <article className={classes}>
@@ -82,7 +97,9 @@ export default ({ employee }) => {
                                 <select id=".location" 
                                     defaultValue=""
                                     name="location"
-                                    className="form-control">
+                                    className="form-control" onChange={(evt) => {
+                                        updateEmployeeLocation(evt.target.value)
+                                    } }>
                         <option value="0">Select location</option>
                         {menuLocations.map((e) => {
                            return <option key={e.id} value={e.id}>
