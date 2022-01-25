@@ -15,6 +15,14 @@ export default ({ employee }) => {
     const { employeeId } = useParams()
     const { getCurrentUser } = useSimpleAuth()
     const { resolveResource, resource } = useResourceResolver()
+    const [locations, setLocation] = useState([])
+    const [menuLocations, setMenuLocations] = useState
+    useEffect(() => {
+        EmployeeRepository.getEmployeeLocations()
+        .then((data) => {
+            setLocation(data)
+        })
+    }, [])
 
     useEffect(() => {
         if (employeeId) {
@@ -29,7 +37,8 @@ export default ({ employee }) => {
         }
     }, [resource])  
 
-
+    const employeeLocations = locations.filter((location) => location.userId === parseInt(resource.id))
+   
     return (
         <article className={classes}>
             <section className="card-body">
@@ -55,7 +64,26 @@ export default ({ employee }) => {
                                 Caring for 0 animals
                             </section>
                             <section>
-                                Working at  location
+                                this employee works at {employeeLocations.map((employeeLocation) => {
+                                    return employeeLocation.location.name
+                                }).join(" and ")}
+                                <div>
+                                <label htmlFor="location">Add location</label>
+                                <select id=".location" 
+                                    defaultValue=""
+                                    name="location"
+                                    className="form-control">
+                        <option value="0">Select location</option>
+                        {locations.map((e) => {
+                           return <option key={e.id} value={e.id}>
+                                {e.name}
+                            </option>
+
+
+                        })}
+                    </select>
+
+                                </div>
                             </section>
                         </>
                         : ""

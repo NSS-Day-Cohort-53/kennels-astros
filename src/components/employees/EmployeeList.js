@@ -8,6 +8,7 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 export default () => {
     const [emps, setEmployees] = useState([])
+    
     const history = useHistory()
     useEffect(
         () => {
@@ -17,7 +18,8 @@ export default () => {
             })
         }, []
     )
-
+   
+    
     return (
         <>
             <button type="submit"
@@ -28,7 +30,7 @@ export default () => {
                     className="btn btn-primary"> Add New Employee </button>
             <div className="employees">
                 {
-                    emps.map(a => <Employee key={a.id} employee={a} />)
+                    emps.map(a => <Employee key={a.id} employee={a}  />)
                 }
             </div>
         </>
