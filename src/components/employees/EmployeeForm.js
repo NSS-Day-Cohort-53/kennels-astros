@@ -2,17 +2,25 @@ import React, { useEffect, useState } from "react"
 import EmployeeRepository from "../../repositories/EmployeeRepository";
 import LocationRepository from "../../repositories/LocationRepository";
 import "./EmployeeForm.css"
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 
-export default (props) => {
-    const [employee, updateEmployee] = useState()
+
+
+export default () => {
+    const [employee, updateEmployee] = useState({})
     const [locations, defineLocations] = useState([])
+    const history = useHistory()
 
-    useEffect(
+    useEffect(() => {
         LocationRepository.getAll()
             .then((data) => {
                 defineLocations(data)
             })
+
+
+    }, []
+
     )
 
     const constructNewEmployee = () => {
@@ -21,24 +29,18 @@ export default (props) => {
         } else {
             EmployeeRepository.addEmployee({
                 name: employee.name,
+                email: employee.email,
                 employee: true
             })
             .then(employee => {
                 EmployeeRepository.assignEmployee({
-                    employeeId: employee.id,
-                    locationId: employee.location
+                    userId: employee.id,
+                    locationId: employee.locationId
                 })
             })
-            .then(() => props.history.push("/employees"))
+            .then(() => history.push("/employees"))
         }
     }
-
-    const handleUserInput = (event) => {
-        const copy = {...employee}
-        copy[event.target.id] = event.target.value
-        updateEmployee(copy)
-    }
-
 
     return (
         <>
@@ -46,7 +48,10 @@ export default (props) => {
                 <h2 className="employeeForm__title">New Employee</h2>
                 <div className="form-group">
                     <label htmlFor="employeeName">Employee name</label>
-                    <input onChange={handleUserInput}
+                    <input  onChange={(event) => {
+        const copy = {...employee}
+        copy.name = event.target.value
+        updateEmployee(copy)}}
                         type="text"
                         required
                         autoFocus
@@ -55,8 +60,23 @@ export default (props) => {
                     />
                 </div>
                 <div className="form-group">
+                    <label htmlFor="employeeEmail">Employee email</label>
+                    <input id=".email" onChange={(event) => {
+        const copy = {...employee}
+        copy.email = event.target.value
+        updateEmployee(copy)}}
+                        type="text"
+        
+                        className="form-control"
+                        placeholder="Employee email"
+                    />
+                </div>
+                <div className="form-group">
                     <label htmlFor="location">Assign to location</label>
-                    <select onChange={handleUserInput}
+                    <select id=".location" onChange={(event) => {
+        const copy = {...employee}
+        copy.locationId = event.target.value
+        updateEmployee(copy)}}
                         defaultValue=""
                         name="location"
                         className="form-control"

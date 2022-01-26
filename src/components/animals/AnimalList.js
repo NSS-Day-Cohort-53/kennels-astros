@@ -26,8 +26,11 @@ export const AnimalListComponent = (props) => {
     }
 
     useEffect(() => {
-        OwnerRepository.getAllCustomers().then(updateOwners)
-        AnimalOwnerRepository.getAll().then(setAnimalOwners)
+        OwnerRepository.getAllCustomers()
+            .then(updateOwners)
+
+        AnimalOwnerRepository.getAll()
+            .then(setAnimalOwners)
         syncAnimals()
     }, [])
 
@@ -65,7 +68,7 @@ export const AnimalListComponent = (props) => {
                 {
                     animals.map(anml =>
                         <Animal key={`animal--${anml.id}`} animal={anml}
-                            animalOwners={animalOwners}
+                            animalOwner={animalOwners}
                             owners={owners}
                             syncAnimals={syncAnimals}
                             setAnimalOwners={setAnimalOwners}
