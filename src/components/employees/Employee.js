@@ -8,7 +8,7 @@ import "./Employee.css";
 import LocationRepository from "../../repositories/LocationRepository";
 
 export default ({ employee }) => {
-  const [animalCount, setCount] = useState(0);
+  const [animalCount, setCount] = useState("");
   const [location, markLocation] = useState({ name: "" });
   const [classes, defineClasses] = useState("card employee");
   const { employeeId } = useParams();
@@ -16,17 +16,34 @@ export default ({ employee }) => {
   const { resolveResource, resource } = useResourceResolver();
   const [locations, setLocation] = useState([]);
   const [menuLocations, setMenuLocations] = useState([]);
+  const employeeLocations = locations.filter(
+    (location) => location.userId === parseInt(resource.id)
+  );
+  const employeeLocationId = employeeLocations.map((location) => {
+    return location.locationId;
+  });
+  
+  useEffect(() => {
+    if (employeeId){
+    EmployeeRepository.getAnimalCount(employeeId)
+    .then((data) => {
+      setCount(data.length)
+    })}
+  },{animalCount} )
+  
 
   useEffect(() => {
+    if (employeeId){
     EmployeeRepository.getEmployeeLocations().then((data) => {
       setLocation(data);
-    });
+    })};
   }, []);
 
   useEffect(() => {
+    if (employeeId){
     LocationRepository.getAll().then((data) => {
       setMenuLocations(data);
-    });
+    })};
   }, []);
 
   useEffect(() => {
@@ -42,12 +59,6 @@ export default ({ employee }) => {
     }
   }, [resource]);
 
-  const employeeLocations = locations.filter(
-    (location) => location.userId === parseInt(resource.id)
-  );
-  const employeeLocationId = employeeLocations.map((location) => {
-    return location.locationId;
-  });
 
   const updateEmployeeLocation = (locId) => {
     if (
@@ -92,9 +103,9 @@ export default ({ employee }) => {
         </h5>
         {employeeId ? (
           <>
-            <section>Caring for 0 animals</section>
+            <section>Caring for {animalCount} animals</section>
             <section>
-              this employee works at{" "}
+            this employee works at{" "}
               {employeeLocations
                 .map((employeeLocation) => {
                   return employeeLocation.location.name;
@@ -108,6 +119,7 @@ export default ({ employee }) => {
                   name="location"
                   className="form-control"
                   onChange={(evt) => {
+                    if (evt.target.value >  0)
                     updateEmployeeLocation(evt.target.value);
                   }}
                 >
